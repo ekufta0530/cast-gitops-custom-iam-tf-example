@@ -52,6 +52,11 @@ resource "castai_eks_cluster" "my_castai_cluster" {
   name                       = var.aws_cluster_name
   delete_nodes_on_disconnect = var.delete_nodes_on_disconnect
   assume_role_arn            = aws_iam_role.assume_role.arn
+
+  depends_on = [
+    aws_iam_role_policy_attachment.assume_role_readonly_policy_attachment,
+    aws_iam_role_policy.inline_role_policy,
+  ]
 }
 
 # Creates node configuration

@@ -22,7 +22,7 @@ resource "aws_iam_instance_profile" "castai_instance_profile" {
 
 # Create instance profile role
 resource "aws_iam_role" "castai_instance_profile_role" {
-  name = local.instance_profile_role_name
+  name                 = local.instance_profile_role_name
   permissions_boundary = var.permissions_boundary_arn
   assume_role_policy = jsonencode({
     Version : "2012-10-17"
@@ -58,7 +58,7 @@ resource "aws_iam_role_policy_attachment" "instance_profile_policy" {
 
 # Create role that will be assumed by CAST AI user.
 resource "aws_iam_role" "assume_role" {
-  name = local.iam_role_name
+  name                 = local.iam_role_name
   permissions_boundary = var.permissions_boundary_arn
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -82,7 +82,10 @@ resource "aws_iam_role" "assume_role" {
 # Attach readonly policies to role.
 resource "aws_iam_role_policy_attachment" "assume_role_readonly_policy_attachment" {
   for_each = toset([
-    "arn:${local.partition}:iam::aws:policy/AmazonEC2ReadOnlyAccess"
+    "arn:${local.partition}:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+    "arn:${local.partition}:iam::aws:policy/CloudWatchReadOnlyAccess",
+    "arn:${local.partition}:iam::aws:policy/ElasticLoadBalancingReadOnly",
+    "arn:${local.partition}:iam::aws:policy/IAMReadOnlyAccess",
   ])
   role       = aws_iam_role.assume_role.name
   policy_arn = each.value

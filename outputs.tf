@@ -11,17 +11,17 @@ output "cluster_token" {
 
 output "instance_profile_role_arn" {
   description = "Arn of created cast instance role"
-  value       = module.castai-eks-role-iam.instance_profile_role_arn
+  value       = aws_iam_role.castai_instance_profile_role.arn
 }
 
 
 output "instance_profile_arn" {
   description = "Arn of created cast instanceprofile role"
-  value       = module.castai-eks-role-iam.instance_profile_arn
+  value       = aws_iam_instance_profile.castai_instance_profile.arn
 }
 
 
 output "cast_role_arn" {
   description = "Arn of created cast role"
-  value       = module.castai-eks-role-iam.role_arn
+  value       = aws_iam_role.assume_role.arn
 }
