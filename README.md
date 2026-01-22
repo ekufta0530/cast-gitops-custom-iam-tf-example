@@ -1,5 +1,48 @@
 ## EKS and CAST AI example for GitOps onboarding flow
 
+## Custom IAM Configuration
+
+This example extends the standard CAST AI GitOps onboarding by using **custom IAM resources** instead of the default `castai-eks-role-iam` module. This allows for additional IAM customization such as **permission boundaries**.
+
+### Why Custom IAM?
+
+Many organizations require permission boundaries on all IAM roles for security and compliance. The default CAST AI module (`castai/eks-role-iam/castai`) doesn't support permission boundaries, so we create the IAM resources manually in `iam.tf`.
+
+### What Changed
+
+1. **Disabled the default IAM module** in `castai.tf` (lines 22-34 are commented out)
+
+2. **Created custom IAM resources** in `iam.tf`:
+   - `aws_iam_instance_profile.castai_instance_profile` - Instance profile for CAST AI nodes
+   - `aws_iam_role.castai_instance_profile_role` - Role for EC2 instances (with permission boundary)
+   - `aws_iam_role.assume_role` - Role assumed by CAST AI service (with permission boundary)
+   - Inline policies for EC2, EKS, and autoscaling permissions
+
+3. **Added permission boundaries** to both IAM roles:
+   ```hcl
+   resource "aws_iam_role" "castai_instance_profile_role" {
+     name                 = local.instance_profile_role_name
+     permissions_boundary = var.permissions_boundary_arn
+     ...
+   }
+   ```
+
+4. **Updated references** in `castai.tf` to use the custom IAM resources:
+   | Original Module Output | Custom Resource |
+   |------------------------|-----------------|
+   | `module.castai-eks-role-iam.instance_profile_role_arn` | `aws_iam_role.castai_instance_profile_role.arn` |
+   | `module.castai-eks-role-iam.role_arn` | `aws_iam_role.assume_role.arn` |
+   | `module.castai-eks-role-iam.instance_profile_arn` | `aws_iam_instance_profile.castai_instance_profile.arn` |
+
+### Required Variables
+
+Add your permission boundary ARN to your tfvars:
+```hcl
+permissions_boundary_arn = "arn:aws:iam::ACCOUNT_ID:policy/YourPermissionBoundary"
+```
+
+---
+
 ## GitOps flow 
 
 Terraform Managed ==>  IAM roles, CAST AI Node Configuration, CAST Node Templates and CAST Autoscaler policies
