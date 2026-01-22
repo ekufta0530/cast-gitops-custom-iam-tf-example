@@ -1,5 +1,10 @@
 ## Required variables.
 
+variable "permissions_boundary_arn" {
+  type        = string
+  description = "ARN of the permissions boundary to attach to IAM roles"
+}
+
 variable "aws_account_id" {
   type        = string
   description = "ID of AWS account the cluster is located in."
