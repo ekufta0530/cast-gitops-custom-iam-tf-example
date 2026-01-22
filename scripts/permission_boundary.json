@@ -1,0 +1,14 @@
+{
+    "Policy": {
+        "PolicyName": "TestPermissionBoundary",
+        "PolicyId": "ANPAWPPO6QOQNYT64PCPY",
+        "Arn": "arn:aws:iam::445567108000:policy/TestPermissionBoundary",
+        "Path": "/",
+        "DefaultVersionId": "v1",
+        "AttachmentCount": 0,
+        "PermissionsBoundaryUsageCount": 0,
+        "IsAttachable": true,
+        "CreateDate": "2026-01-22T19:28:18+00:00",
+        "UpdateDate": "2026-01-22T19:28:18+00:00"
+    }
+}
